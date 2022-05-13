@@ -1,8 +1,11 @@
-def check_neighbours(coords: tuple[int, int], grid: list[list[int]]) -> int:
+from typing import Literal
+
+
+def check_neighbors(coords: tuple[int, int], grid: list[list[Literal[1, 0]]]) -> int:
     """
     Check neighbours of a cell, and return the number of alive neighbours.
     """
-    alive_neighbours_count = 0
+    alive_neighbors_count = 0
     coord_x = coords[0]
     coord_y = coords[1]
     grid_size_y = len(grid)
@@ -15,12 +18,26 @@ def check_neighbours(coords: tuple[int, int], grid: list[list[int]]) -> int:
         for x in range_x:
             # Don't include self in the count
             if grid[y][x] == 1 and (x, y) != coords:
-                alive_neighbours_count += 1
+                alive_neighbors_count += 1
 
-    return alive_neighbours_count
+    return alive_neighbors_count
 
 
-def game_of_life_step(grid: list[list[int]]):
+def dead_or_alive(original: Literal[1, 0], neigbors_count: int) -> Literal[1, 0]:
+    """Return the next state of the cell."""
+    original_alive = original == 1
+    if original_alive and (neigbors_count == 2 or neigbors_count == 3):
+        # remain alive
+        return 1
+    elif not original_alive and (neigbors_count == 3):
+        # be born
+        return 1
+    else:
+        # die/stay dead
+        return 0
+
+
+def game_of_life_step(grid: list[list[Literal[1, 0]]]) -> list[list[Literal[1, 0]]]:
     """
     Source: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
@@ -35,24 +52,15 @@ def game_of_life_step(grid: list[list[int]]):
       2. Any dead cell with three live neighbours becomes a live cell.
       3. All other live cells die in the next generation. Similarly, all other dead cells stay dead.
     """
-    new_grid: list[list[int]] = []
+    new_grid: list[list[Literal[1, 0]]] = []
 
     for y, row in enumerate(grid):
-        new_row: list[int] = []
+        new_row: list[Literal[1, 0]] = []
         new_grid.append(new_row)
 
         for x, val in enumerate(row):
-            original_alive = val == 1
-            neighbours = check_neighbours((x, y), grid)
-
-            if original_alive and (neighbours == 2 or neighbours == 3):
-                # remain alive
-                new_grid[y].append(1)
-            elif not original_alive and (neighbours == 3):
-                # be born
-                new_grid[y].append(1)
-            else:
-                # die/stay dead
-                new_grid[y].append(0)
+            neighbors = check_neighbors((x, y), grid)
+            new_val = dead_or_alive(val, neighbors)
+            new_row.append(new_val)
 
     return new_grid
