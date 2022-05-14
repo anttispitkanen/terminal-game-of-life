@@ -2,20 +2,33 @@
 
 You need python 3. If your alias points to python 2, replace `python` with `python3`, or fix the situation with something like pyenv.
 
-1. Setup the virtual env
+## Setup
 
-   ```bash
-   python -m venv venv
-   source venv/bin/activate
-   ```
+Setup the virtual env
 
-2. Install dependencies
+```bash
+python -m venv venv
+source venv/bin/activate
+```
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+Install dependencies
 
-3. Run the program, `-h|--help` will show you the arguments and what they do
-   ```bash
-   python main.py -h
-   ```
+```bash
+pip install -r requirements.txt
+```
+
+## Running
+
+Run the program, `-h|--help` will show you the arguments and what they do
+
+```bash
+python main.py -h
+```
+
+## Testing
+
+Run tests with
+
+```bash
+pytest .
+```
