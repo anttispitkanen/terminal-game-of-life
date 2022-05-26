@@ -16,7 +16,7 @@ func TestCheckNeighbors(t *testing.T) {
 	// First row
 	ans = CheckNeighbors(0, 0, testGrid)
 	if ans != 2 {
-		t.Errorf("Expected 3, got %d", ans)
+		t.Errorf("Expected 2, got %d", ans)
 	}
 	ans = CheckNeighbors(1, 0, testGrid)
 	if ans != 3 {
@@ -30,21 +30,21 @@ func TestCheckNeighbors(t *testing.T) {
 	// Second row
 	ans = CheckNeighbors(0, 1, testGrid)
 	if ans != 1 {
-		t.Errorf("Expected 3, got %d", ans)
+		t.Errorf("Expected 1, got %d", ans)
 	}
 	ans = CheckNeighbors(1, 1, testGrid)
 	if ans != 2 {
-		t.Errorf("Expected 3, got %d", ans)
+		t.Errorf("Expected 2, got %d", ans)
 	}
 	ans = CheckNeighbors(2, 1, testGrid)
 	if ans != 1 {
-		t.Errorf("Expected 2, got %d", ans)
+		t.Errorf("Expected 1, got %d", ans)
 	}
 
 	// Third row
 	ans = CheckNeighbors(0, 2, testGrid)
 	if ans != 2 {
-		t.Errorf("Expected 3, got %d", ans)
+		t.Errorf("Expected 2, got %d", ans)
 	}
 	ans = CheckNeighbors(1, 2, testGrid)
 	if ans != 3 {
