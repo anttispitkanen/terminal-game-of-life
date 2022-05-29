@@ -45,6 +45,34 @@ fn print_grid(grid: &logic::Grid) {
     }
 }
 
+// x, y, dead-or-alive
+type RenderCoordinate = (usize, usize, bool);
+
+fn get_grid_diff_for_rendering(
+    old_grid: &logic::Grid,
+    new_grid: &logic::Grid,
+) -> Vec<RenderCoordinate> {
+    let mut diff = Vec::new();
+
+    for (y, row) in old_grid.iter().enumerate() {
+        for (x, cell) in row.iter().enumerate() {
+            if cell != &new_grid[y][x] {
+                diff.push((x, y, new_grid[y][x]));
+            }
+        }
+    }
+
+    return diff;
+}
+
+/*
+TODO: Get the to-be-rendered diff with get_grid_diff_for_rendering(), and then
+iterate over that vector, printing the cells as needed.
+
+The first iteration needs to be rendered completely, for that the existing fn
+should work fine.
+*/
+
 fn clear_screen() {
     // Terminal clear sequence, from https://stackoverflow.com/a/66911945
     print!("{esc}c", esc = 27 as char);
