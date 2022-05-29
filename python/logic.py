@@ -1,7 +1,4 @@
-from typing import Literal
-
-
-def check_neighbors(coords: tuple[int, int], grid: list[list[Literal[1, 0]]]) -> int:
+def check_neighbors(coords: tuple[int, int], grid: list[list[bool]]) -> int:
     """
     Check neighbours of a cell, and return the number of alive neighbours.
     """
@@ -23,21 +20,20 @@ def check_neighbors(coords: tuple[int, int], grid: list[list[Literal[1, 0]]]) ->
     return alive_neighbors_count
 
 
-def dead_or_alive(original: Literal[1, 0], neigbors_count: int) -> Literal[1, 0]:
+def dead_or_alive(original_alive: bool, neigbors_count: int) -> bool:
     """Return the next state of the cell."""
-    original_alive = original == 1
     if original_alive and (neigbors_count == 2 or neigbors_count == 3):
         # remain alive
-        return 1
+        return True
     elif not original_alive and (neigbors_count == 3):
         # be born
-        return 1
+        return True
     else:
         # die/stay dead
-        return 0
+        return False
 
 
-def game_of_life_step(grid: list[list[Literal[1, 0]]]) -> list[list[Literal[1, 0]]]:
+def game_of_life_step(grid: list[list[bool]]) -> list[list[bool]]:
     """
     Source: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
@@ -52,10 +48,10 @@ def game_of_life_step(grid: list[list[Literal[1, 0]]]) -> list[list[Literal[1, 0
       2. Any dead cell with three live neighbours becomes a live cell.
       3. All other live cells die in the next generation. Similarly, all other dead cells stay dead.
     """
-    new_grid: list[list[Literal[1, 0]]] = []
+    new_grid: list[list[bool]] = []
 
     for y, row in enumerate(grid):
-        new_row: list[Literal[1, 0]] = []
+        new_row: list[bool] = []
         new_grid.append(new_row)
 
         for x, val in enumerate(row):

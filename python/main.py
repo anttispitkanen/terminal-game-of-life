@@ -1,37 +1,36 @@
 import random
 import time
 from os import system
-from typing import Literal, cast
 
 from blessings import Terminal
 
 from logic import game_of_life_step
 
 
-def create_random_grid(side_length: int) -> list[list[Literal[1, 0]]]:
+def create_random_grid(side_length: int) -> list[list[bool]]:
     """
     1s represent live cells,
     0s represent dead cells.
     """
-    grid: list[list[Literal[1, 0]]] = []
+    grid: list[list[bool]] = []
     for y in range(side_length):
         grid.append([])
         for x in range(side_length):
-            grid[y].append(cast(Literal[1, 0], random.randint(0, 1)))
+            grid[y].append(random.randint(0, 1) == 1)
     return grid
 
 
-def parse_printable_row(row: list[Literal[1, 0]], terminal: Terminal) -> str:
+def parse_printable_row(row: list[bool], terminal: Terminal) -> str:
     parsed_row = ""
     for val in row:
-        if val == 1:
+        if val:
             parsed_row += terminal.black("🟪 ")
         else:
             parsed_row += terminal.white("⬜️ ")
     return parsed_row
 
 
-def print_grid(grid: list[list[Literal[1, 0]]], terminal: Terminal):
+def print_grid(grid: list[list[bool]], terminal: Terminal):
     for i, row in enumerate(grid):
         with terminal.location(x=0, y=i):
             print(parse_printable_row(row, terminal))

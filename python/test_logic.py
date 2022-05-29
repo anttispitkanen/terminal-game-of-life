@@ -1,13 +1,13 @@
 from logic import check_neighbors, game_of_life_step
 
 test_grid = [
-    [0, 0, 0],
-    [1, 1, 1],
-    [0, 0, 0],
+    [False, False, False],
+    [True, True, True],
+    [False, False, False],
 ]
 
 
-def test_check_neighbouts():
+def test_check_neighbors():
     # first row
     assert check_neighbors((0, 0), test_grid) == 2
     assert check_neighbors((1, 0), test_grid) == 3
@@ -27,9 +27,9 @@ def test_check_neighbouts():
 def test_game_of_life_step():
     # First iteration
     expected_grid = [
-        [0, 1, 0],
-        [0, 1, 0],
-        [0, 1, 0],
+        [False, True, False],
+        [False, True, False],
+        [False, True, False],
     ]
     output_1 = game_of_life_step(test_grid)
     assert output_1 == expected_grid
