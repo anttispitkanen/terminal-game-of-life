@@ -5,6 +5,7 @@ use std::{
     thread, time,
 };
 mod logic;
+mod rendering;
 
 fn random_cell_value() -> bool {
     let mut rng = rand::thread_rng();
@@ -21,61 +22,6 @@ fn create_random_grid(side_length: i32) -> logic::Grid {
         grid.push(row);
     }
     return grid;
-}
-
-fn parse_printable_row(row: &logic::Row) -> String {
-    let mut row_string = String::new();
-    for cell in row {
-        if cell == &true {
-            row_string.push_str("🟪 ");
-        } else {
-            row_string.push_str("⬜️ ");
-        }
-    }
-    row_string.push_str("\n");
-    return row_string;
-}
-
-fn print_grid(grid: &logic::Grid) {
-    // Clear the screen and position the cursor at (1,1),
-    // as inspired by https://hugotunius.se/2019/12/29/efficient-terminal-drawing-in-rust.html
-    print!("\x1B[{};{}H", 1, 1);
-    for row in grid {
-        print!("{}", parse_printable_row(row));
-    }
-}
-
-// x, y, dead-or-alive
-type RenderCoordinate = (usize, usize, bool);
-
-fn get_grid_diff_for_rendering(
-    old_grid: &logic::Grid,
-    new_grid: &logic::Grid,
-) -> Vec<RenderCoordinate> {
-    let mut diff = Vec::new();
-
-    for (y, row) in old_grid.iter().enumerate() {
-        for (x, cell) in row.iter().enumerate() {
-            if cell != &new_grid[y][x] {
-                diff.push((x, y, new_grid[y][x]));
-            }
-        }
-    }
-
-    return diff;
-}
-
-/*
-TODO: Get the to-be-rendered diff with get_grid_diff_for_rendering(), and then
-iterate over that vector, printing the cells as needed.
-
-The first iteration needs to be rendered completely, for that the existing fn
-should work fine.
-*/
-
-fn clear_screen() {
-    // Terminal clear sequence, from https://stackoverflow.com/a/66911945
-    print!("{esc}c", esc = 27 as char);
 }
 
 struct Args {
@@ -134,16 +80,24 @@ fn main() {
     .expect("Error setting SIGINT handler");
 
     let args = parse_args();
-    clear_screen();
-    let mut grid = create_random_grid(args.side_length);
+    rendering::clear_screen();
+    let mut old_grid = create_random_grid(args.side_length);
+    let mut new_grid = old_grid.clone();
+    rendering::print_grid(&old_grid);
 
-    // Could this be done the other way around? I.e. "if false then break"
-    while running.load(sync::atomic::Ordering::SeqCst) {
-        print_grid(&grid);
-        grid = logic::game_of_life_step(&grid);
+    loop {
+        old_grid = new_grid.clone();
+        new_grid = logic::game_of_life_step(&new_grid);
+        let diff = rendering::get_grid_diff_for_rendering(&old_grid, &new_grid);
+        rendering::render_diff(&diff, args.side_length);
+
         thread::sleep(time::Duration::from_secs_f32(args.wait_time));
+
+        if !running.load(sync::atomic::Ordering::SeqCst) {
+            break;
+        }
     }
 
-    clear_screen();
+    rendering::clear_screen();
     println!("Exiting...");
 }
