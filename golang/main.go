@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
-	"os/exec"
 	"os/signal"
 	"time"
 )
@@ -21,32 +20,6 @@ func CreateRandomGrid(sideLength int) Grid {
 		}
 	}
 	return grid
-}
-
-func ParsePrintableRow(row []bool) string {
-	var parsedRow string = ""
-	for _, val := range row {
-		if val == true {
-			parsedRow += fmt.Sprint("🟪 ")
-		} else {
-			parsedRow += fmt.Sprint("⬜️ ")
-		}
-	}
-	return parsedRow
-}
-
-func PrintGrid(grid Grid) {
-	// Terminal clear sequence from https://stackoverflow.com/a/33509850
-	fmt.Printf("\033[0;0H")
-	for _, row := range grid {
-		fmt.Printf(ParsePrintableRow(row) + "\n")
-	}
-}
-
-func ClearScreen() {
-	cmd := exec.Command("clear")
-	cmd.Stdout = os.Stdout
-	cmd.Run()
 }
 
 type args struct {
@@ -89,11 +62,15 @@ func main() {
 	ClearScreen()
 
 	args := ParseArgs()
-	grid := CreateRandomGrid(args.sideLength)
+	oldGrid := CreateRandomGrid(args.sideLength)
+	newGrid := oldGrid
+	RenderInitialGrid(oldGrid)
 
 	for ok := true; ok; ok = true {
-		PrintGrid(grid)
-		grid = GameOfLifeStep(grid)
+		oldGrid = newGrid
+		newGrid = GameOfLifeStep(newGrid)
+		diff := GetDiffForRendering(oldGrid, newGrid)
+		RenderDiff(diff)
 		time.Sleep(time.Duration(args.waitTime*1000) * time.Millisecond)
 	}
 }
