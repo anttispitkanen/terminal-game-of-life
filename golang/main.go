@@ -10,23 +10,23 @@ import (
 	"time"
 )
 
-func CreateRandomGrid(sideLength int) [][]int {
+func CreateRandomGrid(sideLength int) Grid {
 	source := rand.NewSource(time.Now().UnixNano())
 	randGen := rand.New(source)
-	grid := make([][]int, sideLength)
-	for i := 0; i < sideLength; i++ {
-		grid[i] = make([]int, sideLength)
-		for j := 0; j < sideLength; j++ {
-			grid[i][j] = randGen.Intn(2)
+	grid := make(Grid, sideLength)
+	for y := 0; y < sideLength; y++ {
+		grid[y] = make([]bool, sideLength)
+		for x := 0; x < sideLength; x++ {
+			grid[y][x] = randGen.Intn(2) == 1
 		}
 	}
 	return grid
 }
 
-func ParsePrintableRow(row []int) string {
+func ParsePrintableRow(row []bool) string {
 	var parsedRow string = ""
 	for _, val := range row {
-		if val == 1 {
+		if val == true {
 			parsedRow += fmt.Sprint("🟪 ")
 		} else {
 			parsedRow += fmt.Sprint("⬜️ ")
@@ -35,7 +35,7 @@ func ParsePrintableRow(row []int) string {
 	return parsedRow
 }
 
-func PrintGrid(grid [][]int) {
+func PrintGrid(grid Grid) {
 	// Terminal clear sequence from https://stackoverflow.com/a/33509850
 	fmt.Printf("\033[0;0H")
 	for _, row := range grid {

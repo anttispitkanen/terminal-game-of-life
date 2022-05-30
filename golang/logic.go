@@ -1,5 +1,8 @@
 package main
 
+// true represents a live cell, false a dead cell
+type Grid = [][]bool
+
 // Return the larger of two integers
 func Max(a, b int) int {
 	if a > b {
@@ -18,10 +21,8 @@ func Min(a, b int) int {
 }
 
 // Check neighbors of a cell, and return the number of alive neighbors
-func CheckNeighbors(x, y int, grid [][]int) int {
+func CountAliveNeighbors(coordX, coordY int, grid Grid) int {
 	var aliveNeighbors int = 0
-	var coordX = x
-	var coordY = y
 	var gridSizeY = len(grid)
 	var gridSizeX = len(grid[0])
 
@@ -33,7 +34,7 @@ func CheckNeighbors(x, y int, grid [][]int) int {
 	for y := yStart; y <= yEnd; y++ {
 		for x := xStart; x <= xEnd; x++ {
 			// Don't include self in the count
-			if (grid[y][x] == 1) && (x != coordX || y != coordY) {
+			if (grid[y][x] == true) && !(x == coordX && y == coordY) {
 				aliveNeighbors++
 			}
 		}
@@ -42,7 +43,7 @@ func CheckNeighbors(x, y int, grid [][]int) int {
 	return aliveNeighbors
 }
 
-func GameOfLifeStep(grid [][]int) [][]int {
+func GameOfLifeStep(grid Grid) Grid {
 	/*
 		Source: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
@@ -57,25 +58,24 @@ func GameOfLifeStep(grid [][]int) [][]int {
 		2. Any dead cell with three live neighbours becomes a live cell.
 		3. All other live cells die in the next generation. Similarly, all other dead cells stay dead.
 	*/
-	newGrid := make([][]int, len(grid))
+	newGrid := make(Grid, len(grid))
 
 	for y, row := range grid {
-		newRow := make([]int, len(row))
+		newRow := make([]bool, len(row))
 		newGrid[y] = newRow
 
-		for x, val := range row {
-			originalAlive := val == 1
-			aliveNeighborsCount := CheckNeighbors(x, y, grid)
+		for x, originalAlive := range row {
+			aliveNeighborsCount := CountAliveNeighbors(x, y, grid)
 
 			if originalAlive && (aliveNeighborsCount == 2 || aliveNeighborsCount == 3) {
 				// Remain alive
-				newGrid[y][x] = 1
+				newGrid[y][x] = true
 			} else if !originalAlive && aliveNeighborsCount == 3 {
 				// Be born
-				newGrid[y][x] = 1
+				newGrid[y][x] = true
 			} else {
 				// Die or stay dead
-				newGrid[y][x] = 0
+				newGrid[y][x] = false
 			}
 		}
 	}
