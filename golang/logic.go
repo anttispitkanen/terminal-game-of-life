@@ -43,6 +43,19 @@ func CountAliveNeighbors(coordX, coordY int, grid Grid) int {
 	return aliveNeighbors
 }
 
+func DeadOrAlive(originalAlive bool, aliveNeighborsCount int) bool {
+	if originalAlive && (aliveNeighborsCount == 2 || aliveNeighborsCount == 3) {
+		// Remain alive
+		return true
+	} else if !originalAlive && aliveNeighborsCount == 3 {
+		// Be born
+		return true
+	} else {
+		// Die or stay dead
+		return false
+	}
+}
+
 func GameOfLifeStep(grid Grid) Grid {
 	/*
 		Source: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
@@ -66,17 +79,7 @@ func GameOfLifeStep(grid Grid) Grid {
 
 		for x, originalAlive := range row {
 			aliveNeighborsCount := CountAliveNeighbors(x, y, grid)
-
-			if originalAlive && (aliveNeighborsCount == 2 || aliveNeighborsCount == 3) {
-				// Remain alive
-				newGrid[y][x] = true
-			} else if !originalAlive && aliveNeighborsCount == 3 {
-				// Be born
-				newGrid[y][x] = true
-			} else {
-				// Die or stay dead
-				newGrid[y][x] = false
-			}
+			newGrid[y][x] = DeadOrAlive(originalAlive, aliveNeighborsCount)
 		}
 	}
 
