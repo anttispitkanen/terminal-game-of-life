@@ -60,9 +60,9 @@ The `logic` module should have tests for
 
   ```json
   [
-    [0, 0, 0],
-    [1, 1, 1],
-    [0, 0, 0]
+    [false, false, false],
+    [true, true, true],
+    [false, false, false]
   ]
   ```
 
@@ -82,9 +82,9 @@ The `logic` module should have tests for
 
   ```json
   [
-    [0, 0, 0],
-    [1, 1, 1],
-    [0, 0, 0]
+    [false, false, false],
+    [true, true, true],
+    [false, false, false]
   ]
   ```
 
@@ -92,9 +92,9 @@ The `logic` module should have tests for
 
   ```json
   [
-    [0, 1, 0],
-    [0, 1, 0],
-    [0, 1, 0]
+    [false, true, false],
+    [false, true, false],
+    [false, true, false]
   ]
   ```
 
