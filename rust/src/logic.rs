@@ -31,6 +31,19 @@ fn check_neighbors(x_coord: usize, y_coord: usize, grid: &Grid) -> usize {
     return alive_neighbors;
 }
 
+fn dead_or_alive(original_alive: bool, alive_neighbors_count: usize) -> bool {
+    if original_alive && (alive_neighbors_count == 2 || alive_neighbors_count == 3) {
+        // Remain alive
+        return true;
+    } else if !original_alive && alive_neighbors_count == 3 {
+        // Be born
+        return true;
+    } else {
+        // Die or stay dead
+        return false;
+    }
+}
+
 /// Take a grid and run one iteration of the game of life.
 /// Return a new grid.
 pub fn game_of_life_step(grid: &Grid) -> Grid {
@@ -60,16 +73,7 @@ pub fn game_of_life_step(grid: &Grid) -> Grid {
             let alive_neighbors_count = check_neighbors(x, y, grid);
             let original_alive = cell == &true;
 
-            if original_alive && (alive_neighbors_count == 2 || alive_neighbors_count == 3) {
-                // Remain alive
-                new_row.push(true);
-            } else if !original_alive && alive_neighbors_count == 3 {
-                // Be born
-                new_row.push(true);
-            } else {
-                // Die or stay dead
-                new_row.push(false);
-            }
+            new_row.push(dead_or_alive(original_alive, alive_neighbors_count));
 
             x += 1; // increment x index
         }
