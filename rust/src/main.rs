@@ -89,7 +89,7 @@ fn main() {
         old_grid = new_grid.clone();
         new_grid = logic::game_of_life_step(&new_grid);
         let diff = rendering::get_grid_diff_for_rendering(&old_grid, &new_grid);
-        rendering::render_diff(&diff, args.side_length);
+        rendering::render_diff(&diff);
 
         thread::sleep(time::Duration::from_secs_f32(args.wait_time));
 

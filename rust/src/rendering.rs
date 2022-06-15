@@ -55,7 +55,7 @@ pub fn get_grid_diff_for_rendering(
     return diff;
 }
 
-pub fn render_diff(diff: &Vec<RenderCoordinate>, side_length: i32) {
+pub fn render_diff(diff: &Vec<RenderCoordinate>) {
     for (x, y, alive) in diff {
         if *alive {
             println!("\x1B[{};{}H🟪 ", y + 1, (x * 3) + 1);
