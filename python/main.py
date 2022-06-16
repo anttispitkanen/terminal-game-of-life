@@ -1,3 +1,4 @@
+import argparse
 import random
 import time
 from os import system
@@ -21,17 +22,45 @@ def create_random_grid(side_length: int) -> list[list[bool]]:
     return grid
 
 
-def parse_args():
-    import argparse
+def parse_args(terminal_height: int, terminal_width: int) -> argparse.Namespace:
+    def side_length_type(x):
+        """
+        The terminal height and width are used to determine the max size of the grid.
+        """
+        x = int(x)
+
+        # Terminal height as rows. Due to how the grid is printed, we can have max
+        # N-1 rows.
+        max_height = terminal_height - 1
+        # Terminal width as columns, 1 column = 1 character. Since we render "🟪 ",
+        # each game cell takes 3 characters. Thus max width is N/3.
+        max_width = terminal_width / 3
+
+        max_side_length = int(min(max_height, max_width))
+
+        if x > max_side_length:
+            raise argparse.ArgumentTypeError(
+                f"{x} is too large. Max side length is {max_side_length}"
+            )
+
+        return x
 
     parser = argparse.ArgumentParser(
         description="Conway's Game of Life in Terminal in Python"
     )
     parser.add_argument(
-        "-s", "--side-length", type=int, default=20, help="Side length of the grid"
+        "-s",
+        "--side-length",
+        type=side_length_type,
+        default=20,
+        help="Side length of the grid (int).",
     )
     parser.add_argument(
-        "-w", "--wait-time", type=float, default=0.4, help="Wait time between steps"
+        "-w",
+        "--wait-time",
+        type=float,
+        default=0.4,
+        help="Wait time between steps (float)",
     )
     return parser.parse_args()
 
@@ -40,7 +69,7 @@ def main():
     try:
         system("clear")
         terminal = Terminal()
-        args = parse_args()
+        args = parse_args(terminal.height, terminal.width)
         old_grid = create_random_grid(args.side_length)
         new_grid = old_grid.copy()
         render_initial_grid(old_grid, terminal)
