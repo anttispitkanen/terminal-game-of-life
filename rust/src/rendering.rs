@@ -1,9 +1,11 @@
+use std::io::{self, Write};
+
 use super::logic;
 
 // Generic utility
 pub fn clear_screen() {
     // Terminal clear sequence, from https://stackoverflow.com/a/66911945
-    print!("{esc}c", esc = 27 as char);
+    println!("{esc}c", esc = 27 as char);
 }
 
 //
@@ -18,7 +20,6 @@ fn parse_printable_row(row: &logic::Row) -> String {
             row_string.push_str("⬜️ ");
         }
     }
-    row_string.push_str("\n");
     return row_string;
 }
 
@@ -27,7 +28,7 @@ pub fn print_grid(grid: &logic::Grid) {
     // as inspired by https://hugotunius.se/2019/12/29/efficient-terminal-drawing-in-rust.html
     print!("\x1B[{};{}H", 1, 1);
     for row in grid {
-        print!("{}", parse_printable_row(row));
+        println!("{}", parse_printable_row(row));
     }
 }
 
@@ -58,10 +59,11 @@ pub fn get_grid_diff_for_rendering(
 pub fn render_diff(diff: &Vec<RenderCoordinate>) {
     for (x, y, alive) in diff {
         if *alive {
-            println!("\x1B[{};{}H🟪 ", y + 1, (x * 3) + 1);
+            print!("\x1B[{};{}H🟪 ", y + 1, (x * 3) + 1);
         } else {
-            println!("\x1B[{};{}H⬜️ ", y + 1, (x * 3) + 1);
+            print!("\x1B[{};{}H⬜️ ", y + 1, (x * 3) + 1);
         }
+        io::stdout().flush().expect("Unable to flush stdout buffer")
     }
 }
 
