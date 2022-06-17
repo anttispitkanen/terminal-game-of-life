@@ -42,8 +42,8 @@ func ParseArgs(maxSideLength int) args {
 
 	flag.Parse()
 
-	if sideLength > maxSideLength {
-		log.Fatalf("Side length can be at most %d with your current terminal window size", maxSideLength)
+	if sideLength > maxSideLength || sideLength < 3 {
+		log.Fatalf("Side length must be between 3 and %d with your current terminal window size", maxSideLength)
 	}
 
 	return args{
