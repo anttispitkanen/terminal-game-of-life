@@ -38,9 +38,9 @@ def parse_args(terminal_height: int, terminal_width: int) -> argparse.Namespace:
 
         max_side_length = int(min(max_height, max_width))
 
-        if x > max_side_length:
+        if x > max_side_length or x < 3:
             raise argparse.ArgumentTypeError(
-                f"{x} is too large. Max side length is {max_side_length}"
+                f"{x} is not a valid side length, it must be between 3 and {max_side_length} at current terminal window size."
             )
 
         return x
