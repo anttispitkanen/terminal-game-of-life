@@ -11,10 +11,12 @@ This is how every individual implementation should work regardless of language. 
 - Be launched with a single CLI command
 - Support CLI arguments for
   - `-s|--side-length` = grid size = side length of a square grid, default to 20
+    - This must be limited to not be larger than can fit in the current terminal window
   - `-w|--wait-time` = the time between each increment in the game, default to 400ms
   - `-h|--help` print help message
 - According to given arguments, print the game in the terminal window and update it in place as seen in the demo above
 - Handle keyboard interrupt, gracefully clearing the game off the terminal
+- Be able to run with Docker too
 
 ### Design philosophy
 
@@ -31,6 +33,7 @@ This is how every individual implementation should work regardless of language. 
   - `Random grid generation` – parametrized side length
     - `true` represents an alive cell, `false` a dead cell
   - `Argument parsing` – encapsulates reading the CLI args and exposing those to the control flow
+    - Here we need to make sure the side length argument is not smaller than 3, and not larger than what can fit on the current terminal window
 
 - `Logic` module with functions
 
@@ -136,3 +139,11 @@ The `rendering` module should have tests for
     [1, 2, true]
   ]
   ```
+
+### Docker
+
+We want a multi-stage build where the final resulting image is as lean as possible and running as non-root.
+
+#### Note about terminal in Docker
+
+Due to a bug in Docker, in order to correctly get the dimensions of the active host terminal, we need to `sleep 1` before running the script. Here's a repo dedicated to researching and explaining why that is: https://github.com/anttispitkanen/rust-terminal-dimensions-in-docker
