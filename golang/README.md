@@ -21,6 +21,19 @@ go build . # => builds the executable binary "terminal-game-of-life"
 ./terminal-game-of-life # => runs the binary
 ```
 
+## Running in Docker
+
+```bash
+# Build
+docker build -t terminal-game-of-life-go .
+# Run
+docker run -it terminal-game-of-life-go [args]
+```
+
+Note that you need the `-it` flag to pass Docker the tty, otherwise you'll get an error as the program can't read it.
+
+Also note the small delay in the program starting. This is explained in the [root README](../README.md).
+
 ## Testing
 
 Run tests with
