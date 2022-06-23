@@ -25,6 +25,19 @@ Run the program, `-h|--help` will show you the arguments and what they do
 python main.py -h
 ```
 
+## Running in Docker
+
+```bash
+# Build
+docker build -t terminal-game-of-life-python .
+# Run
+docker run -it terminal-game-of-life-python [args]
+```
+
+Note that you need the `-it` flag to pass Docker the tty, otherwise you'll get an error as the program can't read it.
+
+Also note the small delay in the program starting. This is explained in the [root README](../README.md).
+
 ## Testing
 
 Run tests with

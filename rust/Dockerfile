@@ -3,7 +3,7 @@
 ###############################################################################
 FROM rust:1.61-slim-buster as build
 
-# create new empty sehll project
+# create new empty shell project
 RUN USER=root cargo new --bin terminal-game-of-life-rust
 WORKDIR /terminal-game-of-life-rust
 
