@@ -1,6 +1,6 @@
 # terminal-game-of-life
 
-Building [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) in terminal in different languages. Or maybe just Python if I never get back to this 😆
+Building [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) in terminal in different languages. This is my pet project to try out new languages.
 
 ![Video demo](/demo.gif)
 
