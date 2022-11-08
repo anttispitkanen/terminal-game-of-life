@@ -1,4 +1,5 @@
 (ns clojure-tgol.core-test
+  "Testing the core logic"
   (:require [clojure.test :refer :all]
             [clojure-tgol.core :refer :all]))
 
