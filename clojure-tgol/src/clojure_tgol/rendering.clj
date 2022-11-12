@@ -17,7 +17,9 @@
   [grid]
   (->> grid
        (map parse-printable-row)
-       (apply str)))
+       (apply str)
+       print)
+  (flush))
 
 ;;
 ;; Iterative rendering, focused on only rendering the diff
@@ -37,10 +39,11 @@
 (defn render-diff
   "Render the diff between the previous grid and current grid. Just prints, doesn't return anything."
   [diff]
-  (for [value diff]
+  (doseq [value diff]
     (let [x (first value)
           y (second value)
           alive (nth value 2)]
       (if alive
-        (print (format "\033[%s;%sH🟪 " x y))
-        (print (format "\033[%s;%sH⬜️ " x y))))))
+        (print (format "\033[%s;%sH🟪 " (+ y 1) (+ (* x 3) 1)))
+        (print (format "\033[%s;%sH⬜️ " (+ y 1) (+ (* x 3) 1))))))
+  (flush))
