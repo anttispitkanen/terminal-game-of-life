@@ -23,16 +23,27 @@
   [["-w" "--wait-time WAIT_TIME_IN_SECONDS" "Wait time between steps in seconds"
     :default 0.4
     :parse-fn #(Float/parseFloat %)
-    :validate [#(< 0.01 % 3) "Must be a number between 0.01 and 3"]]])
+    :validate [#(< 0.01 % 3) "Must be a number between 0.01 and 3"]]
+   ["-s" "--side-length SIDE_LENGTH" "Side length"
+    :default 20
+    :parse-fn #(Integer/parseInt %)
+   ;; TODO: validate based on terminal size
+    ]
+   ["-h" "--help"]])
 
 (defn -main [& args]
-  (as-> (parse-opts args cli-options) opts
-    (:wait-time (:options opts))
-    (let [grid (create-random-grid 20)]
-      (clear-terminal)
-      (render-initial-grid grid)
-      (loop [current-grid grid]
-        (Thread/sleep (* opts 1000)) ;; <- This is the wait time
-        (let [new-grid (game-of-life-step current-grid)]
-          (render-diff (get-diff-for-rendering current-grid new-grid))
-          (recur new-grid))))))
+  (let [opts (parse-opts args cli-options)
+        options (:options opts)
+        summary (:summary opts)]
+    (if (:help options)
+      ;; Help requested => prints and exits
+      (println summary)
+      ;; No help requested => runs the game
+      (let [grid (create-random-grid (:side-length options))]
+        (clear-terminal)
+        (render-initial-grid grid)
+        (loop [current-grid grid]
+          (let [new-grid (game-of-life-step current-grid)]
+            (render-diff (get-diff-for-rendering current-grid new-grid))
+            (Thread/sleep (* (:wait-time options) 1000))
+            (recur new-grid)))))))
