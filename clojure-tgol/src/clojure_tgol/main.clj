@@ -53,23 +53,23 @@
 ;; TODO:
 ;; - Handle keyboard interrupt
 ;; - Dockerize
+;; - Document
 
 (defn -main [& args]
   (let [opts (parse-opts args cli-options)
         options (:options opts)
         summary (:summary opts)
         errors (:errors opts)]
-    (if (:help options)
-      ;; Help requested => prints and exits
-      ((println summary) (System/exit 0))
-      ;;(if errors (println "ei mittää :D") (System/exit 0)))))
-      (if errors ((println errors) (System/exit 1))
-          ;; No help requested => runs the game
-          (let [grid (create-random-grid (:side-length options))]
-            (clear-terminal)
-            (render-initial-grid grid)
-            (loop [current-grid grid]
-              (let [new-grid (game-of-life-step current-grid)]
-                (render-diff (get-diff-for-rendering current-grid new-grid))
-                (Thread/sleep (* (:wait-time options) 1000))
-                (recur new-grid))))))))
+    ;; Help requested => prints and exits
+    (if (:help options) ((println summary) (System/exit 0)) nil)
+    ;;(if errors (println "ei mittää :D") (System/exit 0)))))
+    (if errors ((println errors) (System/exit 1)) nil)
+    ;; No help requested => runs the game
+    (let [grid (create-random-grid (:side-length options))]
+      (clear-terminal)
+      (render-initial-grid grid)
+      (loop [current-grid grid]
+        (let [new-grid (game-of-life-step current-grid)]
+          (render-diff (get-diff-for-rendering current-grid new-grid))
+          (Thread/sleep (* (:wait-time options) 1000))
+          (recur new-grid))))))
