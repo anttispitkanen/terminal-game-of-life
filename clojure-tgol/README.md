@@ -1,22 +1,48 @@
-# clojure-tgol
+# Terminal Game of Life – Clojure
 
-A Clojure library designed to ... well, that part is up to you.
+Note the name of the directory, a Leiningen app cannot be named "clojure", so it had to be suffixed with "-tgol" 🤷
 
-## Usage
+## Prerequisites
 
-FIXME
+- [Clojure](https://clojure.org/guides/install_clojure)
+  - Note its prerequisite of Java, follow the link above
+- [Leiningen](https://leiningen.org/)
 
-## License
+## Running
 
-Copyright © 2022 FIXME
+Note that `lein run` and the actual args (like `-w 0.1 -s 30`) need to be separated by two dashes `--`. Without it the args are considered for `lein run` itself, and not the app.
 
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
+```bash
+lein run [-- [args]]
+```
 
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+You probably also want to set up a [REPL](https://clojure.org/guides/repl/introduction) for the development, but that's outside the scope of this document.
+
+## Building
+
+```bash
+lein uberjar
+```
+
+After which you can run the jar, provided that you have Java installed:
+
+```bash
+java -jar ./target/clojure-tgol-0.1.0-SANPSHOT-standalone.jar [args]
+```
+
+## Running in Docker
+
+```bash
+# Build
+docker build -t terminal-game-of-life-clojure .
+# Run
+docker run -it terminal-game-of-life-clojure [args]
+```
+
+Note that you need the `-it` flag to pass Docker the tty, otherwise you'll get an error as the program can't read it.
+
+## Testing
+
+```bash
+lein test
+```

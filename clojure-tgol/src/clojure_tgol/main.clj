@@ -57,7 +57,6 @@
 ;; TODO:
 ;; - Handle keyboard interrupt
 ;;   - This turned out not to be so trivial, maybe looking at it later again
-;; - Document
 
 (defn -main [& args]
   (let [opts (parse-opts args (get-cli-options))
