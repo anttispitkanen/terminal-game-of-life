@@ -39,7 +39,11 @@
           max-height (:rows t)]
       (min max-widh max-height))))
 
-(def cli-options
+;; This is a function instead of a constant so that it doesn't need to be evaluated
+;; at uberjar compilation time. That was a problem in the docker build, apparently
+;; because the /dev/tty device doesn't exist at that time, and that's needed for
+;; getting the terminal dimensions used here.
+(defn get-cli-options []
   [["-w" "--wait-time WAIT_TIME_IN_SECONDS" "Wait time between steps in seconds"
     :default 0.4
     :parse-fn #(Float/parseFloat %)
@@ -52,11 +56,11 @@
 
 ;; TODO:
 ;; - Handle keyboard interrupt
-;; - Dockerize
+;;   - This turned out not to be so trivial, maybe looking at it later again
 ;; - Document
 
 (defn -main [& args]
-  (let [opts (parse-opts args cli-options)
+  (let [opts (parse-opts args (get-cli-options))
         options (:options opts)
         summary (:summary opts)
         errors (:errors opts)]
