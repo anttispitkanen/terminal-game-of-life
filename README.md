@@ -13,6 +13,8 @@ This is how every individual implementation should work regardless of language. 
   - `-s|--side-length` = grid size = side length of a square grid, default to 20
     - This must be limited to not be larger than can fit in the current terminal window
   - `-w|--wait-time` = the time between each increment in the game, default to 400ms
+  - `-l|--live-emoji` = the emoji used to render a live cell (default to 🟪)
+  - `-d|--dead-emoji` = the emoji used to render a dead cell (default to ⬜️)
   - `-h|--help` print help message
 - According to given arguments, print the game in the terminal window and update it in place as seen in the demo above
 - Handle keyboard interrupt, gracefully clearing the game off the terminal

@@ -62,6 +62,20 @@ def parse_args(terminal_height: int, terminal_width: int) -> argparse.Namespace:
         default=0.4,
         help="Wait time between steps (float)",
     )
+    parser.add_argument(
+        "-l",
+        "--live-emoji",
+        type=str,
+        default="🟪",
+        help="Emoji to use for live cells (str)",
+    )
+    parser.add_argument(
+        "-d",
+        "--dead-emoji",
+        type=str,
+        default="⬜️",
+        help="Emoji to use for dead cells (str)",
+    )
     return parser.parse_args()
 
 
@@ -72,13 +86,13 @@ def main():
         args = parse_args(terminal.height, terminal.width)
         old_grid = create_random_grid(args.side_length)
         new_grid = old_grid.copy()
-        render_initial_grid(old_grid, terminal)
+        render_initial_grid(old_grid, terminal, args.live_emoji, args.dead_emoji)
 
         while True:
             old_grid = new_grid
             new_grid = game_of_life_step(new_grid)
             diff = get_diff_for_rendering(old_grid, new_grid)
-            render_diff(diff, terminal)
+            render_diff(diff, terminal, args.live_emoji, args.dead_emoji)
             time.sleep(args.wait_time)
 
     except KeyboardInterrupt:
